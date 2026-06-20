@@ -36,7 +36,7 @@ jobs:
           # 使用我们在 Secrets 中配置的 Token
           personal_token: ${{ secrets.GH_TOKEN }}
           # 目标仓库地址（请确保用户名正确）
-          external_repository: moXue-o/home-xyiun.github.io
+          external_repository: moXue-o/moxue-o.github.io
           # 指定生成的静态文件目录（根据项目实际情况，可能是 ./ 或 ./dist）
           publish_dir: ./
           # 提交信息
