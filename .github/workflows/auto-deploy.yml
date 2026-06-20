@@ -1,0 +1,43 @@
+name: Auto Deploy to GitHub Pages
+
+on:
+  # 每天凌晨 2 点（UTC时间，即北京时间上午10点）自动运行
+  schedule:
+    - cron: '0 2 * * *'
+  # 允许在 Actions 页面手动点击触发
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出当前仓库代码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. 安装项目依赖
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. 运行构建脚本生成静态文件
+      - name: Build static files
+        run: python build_static.py
+
+      # 5. 将生成的静态文件推送到目标 Pages 仓库
+      - name: Deploy to Pages Repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # 使用我们在 Secrets 中配置的 Token
+          personal_token: ${{ secrets.GH_TOKEN }}
+          # 目标仓库地址（请确保用户名正确）
+          external_repository: moXue-o/home.moXue-o.github.io
+          # 指定生成的静态文件目录（根据项目实际情况，可能是 ./ 或 ./dist）
+          publish_dir: ./
+          # 提交信息
+          commit_message: "Auto deploy: ${{ github.sha }}"
